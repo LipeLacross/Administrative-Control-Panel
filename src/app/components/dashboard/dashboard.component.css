@@ -1,0 +1,8 @@
+.dashboard {
+  text-align: center;
+}
+nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #007bff;
+}

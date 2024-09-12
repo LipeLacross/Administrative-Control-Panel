@@ -6,7 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { SalesComponent } from './components/sales/sales.component';
-import { RouterModule } from '@angular/router';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SalesService } from '../../../services/sales.service';
 import { Sale } from '../../../models/sales.model';
 
 @Component({
@@ -6,9 +7,28 @@ import { Sale } from '../../../models/sales.model';
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css']
 })
-export class SalesComponent {
-  sales: Sale[] = [
-    { id: 1, productName: 'Item A', amount: 100, date: new Date() },
-    { id: 2, productName: 'Item B', amount: 200, date: new Date() }
-  ];
+export class SalesComponent implements OnInit {
+  sales: Sale[] = [];
+  newSale: Sale = { id: 0, productName: '', amount: 0, date: new Date() };
+
+  constructor(private salesService: SalesService) { }
+
+  ngOnInit(): void {
+    this.loadSales();
+  }
+
+  loadSales(): void {
+    this.salesService.getSales().subscribe(sales => this.sales = sales);
+  }
+
+  addSale(): void {
+    this.salesService.addSale(this.newSale).subscribe(() => {
+      this.loadSales();
+      this.newSale = { id: 0, productName: '', amount: 0, date: new Date() };
+    });
+  }
+
+  deleteSale(id: number): void {
+    this.salesService.deleteSale(id).subscribe(() => this.loadSales());
+  }
 }

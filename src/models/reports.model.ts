@@ -1,5 +1,5 @@
-export interface InventoryItem {
-  id: number;
-  name: string;
-  quantity: number;
+export interface Report {
+  id: string;
+  title: string;
+  content: string;
 }

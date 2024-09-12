@@ -1,3 +1,15 @@
-<div *ngFor="let item of items">
-  <p>{{ item.name }} - {{ item.quantity }} - ${{ item.price }}</p>
+<div class="inventory">
+  <h2>Inventory</h2>
+  <div>
+    <h3>Add New Item</h3>
+    <input [(ngModel)]="newItem.name" placeholder="Name">
+    <input [(ngModel)]="newItem.quantity" placeholder="Quantity" type="number">
+    <input [(ngModel)]="newItem.price" placeholder="Price" type="number">
+    <button (click)="addItem()">Add Item</button>
+  </div>
+  <div *ngFor="let item of items">
+    <p>{{ item.name }} - {{ item.quantity }} - ${{ item.price }}
+      <button (click)="deleteItem(item.id)">Delete</button>
+    </p>
+  </div>
 </div>

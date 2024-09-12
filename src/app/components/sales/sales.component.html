@@ -1,3 +1,15 @@
-<div *ngFor="let sale of sales">
-  <p>{{ sale.productName }} - {{ sale.amount }}</p>
+<div class="sales">
+  <h2>Sales</h2>
+  <div>
+    <h3>Add New Sale</h3>
+    <input [(ngModel)]="newSale.productName" placeholder="Product Name">
+    <input [(ngModel)]="newSale.amount" placeholder="Amount" type="number">
+    <input [(ngModel)]="newSale.date" placeholder="Date" type="date">
+    <button (click)="addSale()">Add Sale</button>
+  </div>
+  <div *ngFor="let sale of sales">
+    <p>{{ sale.productName }} - ${{ sale.amount }} - {{ sale.date | date }}
+      <button (click)="deleteSale(sale.id)">Delete</button>
+    </p>
+  </div>
 </div>

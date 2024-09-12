@@ -1,6 +1,6 @@
 export interface Sale {
   id: number;
-  productName: string; // Use o nome correto aqui
+  productName: string;
   amount: number;
   date: Date;
 }

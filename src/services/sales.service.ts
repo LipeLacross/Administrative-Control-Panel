@@ -7,7 +7,7 @@ import { Sale } from '../models/sales.model';
   providedIn: 'root'
 })
 export class SalesService {
-  private apiUrl = 'http://localhost:3000/api/sales'; // URL da sua API
+  private apiUrl = 'http://localhost:3000/api/sales'; // Atualize aqui
 
   constructor(private http: HttpClient) { }
 
@@ -15,19 +15,15 @@ export class SalesService {
     return this.http.get<Sale[]>(this.apiUrl);
   }
 
-  getSale(id: number): Observable<Sale> {
-    return this.http.get<Sale>(`${this.apiUrl}/${id}`);
-  }
-
   addSale(sale: Sale): Observable<Sale> {
     return this.http.post<Sale>(this.apiUrl, sale);
   }
 
-  updateSale(id: number, sale: Sale): Observable<Sale> {
+  updateSale(id: string, sale: Sale): Observable<Sale> {
     return this.http.put<Sale>(`${this.apiUrl}/${id}`, sale);
   }
 
-  deleteSale(id: number): Observable<void> {
+  deleteSale(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

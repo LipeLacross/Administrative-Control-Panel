@@ -1,15 +1,36 @@
-<div class="sales">
-  <h2>Sales</h2>
+<div class="container">
+  <h2 class="title">Sales</h2>
+
+  <!-- Formulário para adicionar nova venda -->
   <div>
     <h3>Add New Sale</h3>
-    <input [(ngModel)]="newSale.productName" placeholder="Product Name">
-    <input [(ngModel)]="newSale.amount" placeholder="Amount" type="number">
-    <input [(ngModel)]="newSale.date" placeholder="Date" type="date">
-    <button (click)="addSale()">Add Sale</button>
+    <input type="text" #productName placeholder="Product Name" />
+    <input type="number" #amount placeholder="Amount" />
+    <button (click)="addSale(productName.value, amount.valueAsNumber)">Add Sale</button>
   </div>
-  <div *ngFor="let sale of sales">
-    <p>{{ sale.productName }} - ${{ sale.amount }} - {{ sale.date | date }}
-      <button (click)="deleteSale(sale.id)">Delete</button>
-    </p>
+
+  <!-- Lista de vendas -->
+  <div *ngIf="sales.length > 0">
+    <h3>Sales List</h3>
+    <ul>
+      <li *ngFor="let sale of sales">
+        <!-- Campos editáveis para atualização -->
+        <input type="text" [(ngModel)]="sale.productName" placeholder="Product Name" />
+        <input type="number" [(ngModel)]="sale.amount" placeholder="Amount" />
+
+        <!-- Botão de atualização -->
+        <button *ngIf="sale._id" (click)="updateSale(sale._id, sale.productName, sale.amount)">
+          Update
+        </button>
+
+        <!-- Botão de deletar -->
+        <button *ngIf="sale._id" (click)="deleteSale(sale._id)">Delete</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Mensagem se não houver vendas -->
+  <div *ngIf="sales.length === 0">
+    <p>No sales found.</p>
   </div>
 </div>

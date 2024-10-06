@@ -1,15 +1,40 @@
-<div class="inventory">
-  <h2>Inventory</h2>
+<div class="container">
+  <h2 class="title">Inventory</h2>
+
+  <!-- Formulário para adicionar novo item -->
   <div>
     <h3>Add New Item</h3>
-    <input [(ngModel)]="newItem.name" placeholder="Name">
-    <input [(ngModel)]="newItem.quantity" placeholder="Quantity" type="number">
-    <input [(ngModel)]="newItem.price" placeholder="Price" type="number">
-    <button (click)="addItem()">Add Item</button>
+    <input type="text" #name placeholder="Name">
+    <input type="number" #quantity placeholder="Quantity">
+    <input type="number" #price placeholder="Price">
+    <button (click)="addItem(name.value, quantity.valueAsNumber, price.valueAsNumber)">Add Item</button>
   </div>
-  <div *ngFor="let item of items">
-    <p>{{ item.name }} - {{ item.quantity }} - ${{ item.price }}
-      <button (click)="deleteItem(item.id)">Delete</button>
-    </p>
+
+  <!-- Lista de itens -->
+  <div *ngIf="items.length > 0">
+    <h3>Items List</h3>
+    <ul>
+      <li *ngFor="let item of items">
+        <!-- Campos editáveis para atualização -->
+        <input type="text" [(ngModel)]="item.name" placeholder="Name">
+        <input type="number" [(ngModel)]="item.quantity" placeholder="Quantity">
+        <input type="number" [(ngModel)]="item.price" placeholder="Price">
+
+        <!-- Botão de atualização -->
+        <button *ngIf="item._id" (click)="updateItem(item._id, item.name, item.quantity, item.price)">
+          Update
+        </button>
+
+        <!-- Botão de deletar -->
+        <button *ngIf="item._id" (click)="deleteItem(item._id)">
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Mensagem se não houver itens -->
+  <div *ngIf="items.length === 0">
+    <p>No items found.</p>
   </div>
 </div>

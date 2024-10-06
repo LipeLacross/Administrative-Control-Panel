@@ -7,7 +7,7 @@ import { InventoryItem } from '../models/inventory.model';
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiUrl = 'http://localhost:3000/api/inventory'; // URL da sua API
+  private apiUrl = 'http://localhost:3000/api/inventory'; // Atualize aqui
 
   constructor(private http: HttpClient) { }
 
@@ -15,19 +15,15 @@ export class InventoryService {
     return this.http.get<InventoryItem[]>(this.apiUrl);
   }
 
-  getItem(id: number): Observable<InventoryItem> {
-    return this.http.get<InventoryItem>(`${this.apiUrl}/${id}`);
-  }
-
   addItem(item: InventoryItem): Observable<InventoryItem> {
     return this.http.post<InventoryItem>(this.apiUrl, item);
   }
 
-  updateItem(id: number, item: InventoryItem): Observable<InventoryItem> {
+  updateItem(id: string, item: InventoryItem): Observable<InventoryItem> {
     return this.http.put<InventoryItem>(`${this.apiUrl}/${id}`, item);
   }
 
-  deleteItem(id: number): Observable<void> {
+  deleteItem(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

@@ -1,5 +1,5 @@
 export interface InventoryItem {
-  id: number;
+  _id?: string; // Adicione '?' para permitir valores indefinidos
   name: string;
   quantity: number;
   price: number;

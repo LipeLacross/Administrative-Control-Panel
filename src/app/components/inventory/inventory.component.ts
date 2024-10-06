@@ -9,7 +9,6 @@ import { InventoryItem } from '../../../models/inventory.model';
 })
 export class InventoryComponent implements OnInit {
   items: InventoryItem[] = [];
-  newItem: InventoryItem = { id: 0, name: '', quantity: 0, price: 0 };
 
   constructor(private inventoryService: InventoryService) { }
 
@@ -18,17 +17,41 @@ export class InventoryComponent implements OnInit {
   }
 
   loadItems(): void {
-    this.inventoryService.getItems().subscribe(items => this.items = items);
+    this.inventoryService.getItems().subscribe(
+      (data: InventoryItem[]) => this.items = data,
+      (error) => console.error('Erro ao carregar os itens do inventário', error)
+    );
   }
 
-  addItem(): void {
-    this.inventoryService.addItem(this.newItem).subscribe(() => {
-      this.loadItems();
-      this.newItem = { id: 0, name: '', quantity: 0, price: 0 };
-    });
+  addItem(name: string, quantity: number, price: number): void {
+    const newItem: InventoryItem = { name, quantity, price };
+    this.inventoryService.addItem(newItem).subscribe(
+      (item: InventoryItem) => {
+        this.items.push(item);
+      },
+      (error) => console.error('Erro ao adicionar o item', error)
+    );
   }
 
-  deleteItem(id: number): void {
-    this.inventoryService.deleteItem(id).subscribe(() => this.loadItems());
+  updateItem(id: string, name: string, quantity: number, price: number): void {
+    const updatedItem: InventoryItem = { name, quantity, price };
+    this.inventoryService.updateItem(id, updatedItem).subscribe(
+      () => {
+        const index = this.items.findIndex(item => item._id === id);
+        if (index !== -1) {
+          this.items[index] = { _id: id, ...updatedItem };
+        }
+      },
+      (error) => console.error('Erro ao atualizar o item', error)
+    );
+  }
+
+  deleteItem(id: string): void {
+    this.inventoryService.deleteItem(id).subscribe(
+      () => {
+        this.items = this.items.filter(item => item._id !== id);
+      },
+      (error) => console.error('Erro ao deletar o item', error)
+    );
   }
 }

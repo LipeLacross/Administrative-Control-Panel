@@ -7,16 +7,12 @@ import { Report } from '../models/reports.model';
   providedIn: 'root'
 })
 export class ReportsService {
-  private apiUrl = 'http://localhost:3000/api/reports'; // URL da sua API
+  private apiUrl = 'http://localhost:3000/api/reports'; // Ajuste a URL conforme necessário
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getReports(): Observable<Report[]> {
     return this.http.get<Report[]>(this.apiUrl);
-  }
-
-  getReport(id: string): Observable<Report> {
-    return this.http.get<Report>(`${this.apiUrl}/${id}`);
   }
 
   addReport(report: Report): Observable<Report> {

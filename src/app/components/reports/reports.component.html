@@ -1,15 +1,38 @@
-<div class="reports">
-  <h2>Reports</h2>
+<div class="container">
+  <h2 class="title">Reports</h2>
+
+  <!-- Formulário para adicionar novo relatório -->
   <div>
     <h3>Add New Report</h3>
-    <input [(ngModel)]="newReport.title" placeholder="Title">
-    <textarea [(ngModel)]="newReport.content" placeholder="Content"></textarea>
-    <button (click)="addReport()">Add Report</button>
+    <input type="text" #title placeholder="Title" />
+    <textarea #description placeholder="Description"></textarea>
+    <button (click)="addReport(title.value, description.value)">Add Report</button>
   </div>
-  <div *ngFor="let report of reports">
-    <h3>{{ report.title }}</h3>
-    <p>{{ report.content }}
-      <button (click)="deleteReport(report.id)">Delete</button>
-    </p>
+
+  <!-- Lista de relatórios -->
+  <div *ngIf="reports.length > 0">
+    <h3>Reports List</h3>
+    <ul>
+      <li *ngFor="let report of reports">
+        <!-- Campos editáveis para atualização -->
+        <input type="text" [(ngModel)]="report.title" placeholder="Title" />
+        <textarea [(ngModel)]="report.description" placeholder="Description"></textarea>
+
+        <!-- Botão de atualização -->
+        <button *ngIf="report._id" (click)="updateReport(report._id || '', report.title || '', report.description || '')">
+          Update
+        </button>
+
+        <!-- Botão de deletar -->
+        <button *ngIf="report._id" (click)="deleteReport(report._id || '')">
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Mensagem se não houver relatórios -->
+  <div *ngIf="reports.length === 0">
+    <p>No reports found.</p>
   </div>
 </div>

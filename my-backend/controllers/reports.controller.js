@@ -20,7 +20,18 @@ exports.getReportById = async (req, res) => {
 };
 
 exports.createReport = async (req, res) => {
-  const newReport = new Report(req.body);
+  const { title, description } = req.body;
+
+  if (!title || !description) {
+    return res.status(400).json({ message: 'Title and description are required' });
+  }
+
+  const newReport = new Report({
+    title,
+    description,
+    date: new Date() // Define a data atual
+  });
+
   try {
     const savedReport = await newReport.save();
     res.status(201).json(savedReport);
@@ -30,8 +41,18 @@ exports.createReport = async (req, res) => {
 };
 
 exports.updateReport = async (req, res) => {
+  const { title, description } = req.body;
+
+  if (!title || !description) {
+    return res.status(400).json({ message: 'Title and description are required' });
+  }
+
   try {
-    const updatedReport = await Report.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedReport = await Report.findByIdAndUpdate(
+      req.params.id,
+      { title, description, date: new Date() },
+      { new: true }
+    );
     if (!updatedReport) return res.status(404).json({ message: 'Report not found' });
     res.json(updatedReport);
   } catch (err) {

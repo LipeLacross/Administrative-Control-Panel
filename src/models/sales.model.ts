@@ -1,6 +1,7 @@
 export interface Sale {
-  _id?: string; // Defina como opcional se o backend gerar o ID
+  _id?: string; // O _id pode ser opcional se você não estiver passando ao criar
   productName: string;
   amount: number;
+  price: number;
   date: Date;
 }

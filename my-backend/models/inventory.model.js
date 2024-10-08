@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
-const InventorySchema = new mongoose.Schema({
-  name: String,
-  quantity: Number,
-  price: Number
+const inventorySchema = new mongoose.Schema({
+  // O _id será gerado automaticamente pelo MongoDB
+  name: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Inventory', InventorySchema);
+module.exports = mongoose.model('Inventory', inventorySchema);

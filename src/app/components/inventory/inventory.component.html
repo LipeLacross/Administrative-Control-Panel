@@ -1,40 +1,26 @@
-<div class="container">
-  <h2 class="title">Inventory</h2>
-
-  <!-- Formulário para adicionar novo item -->
+<div>
   <div>
-    <h3>Add New Item</h3>
-    <input type="text" #name placeholder="Name">
-    <input type="number" #quantity placeholder="Quantity">
-    <input type="number" #price placeholder="Price">
-    <button (click)="addItem(name.value, quantity.valueAsNumber, price.valueAsNumber)">Add Item</button>
+    <h2>Adicionar Item</h2>
+    <input type="text" #name placeholder="Nome do item" />
+    <input type="number" #quantity placeholder="Quantidade" />
+    <input type="number" #price placeholder="Preço" />
+    <button (click)="addItem(name.value, quantity.value.toString(), price.value.toString())">Adicionar</button>
   </div>
-
-  <!-- Lista de itens -->
-  <div *ngIf="items.length > 0">
-    <h3>Items List</h3>
-    <ul>
-      <li *ngFor="let item of items">
-        <!-- Campos editáveis para atualização -->
-        <input type="text" [(ngModel)]="item.name" placeholder="Name">
-        <input type="number" [(ngModel)]="item.quantity" placeholder="Quantity">
-        <input type="number" [(ngModel)]="item.price" placeholder="Price">
-
-        <!-- Botão de atualização -->
-        <button *ngIf="item._id" (click)="updateItem(item._id, item.name, item.quantity, item.price)">
-          Update
-        </button>
-
-        <!-- Botão de deletar -->
-        <button *ngIf="item._id" (click)="deleteItem(item._id)">
-          Delete
-        </button>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Mensagem se não houver itens -->
-  <div *ngIf="items.length === 0">
-    <p>No items found.</p>
-  </div>
+  <h2>Itens do Inventário</h2>
+  <input [(ngModel)]="searchTerm" placeholder="Pesquisar" />
+  <ul>
+    <li *ngFor="let item of filteredItems">
+      <input [(ngModel)]="item.name" placeholder="Nome" />
+      <input type="number" [(ngModel)]="item.quantity" placeholder="Quantidade" />
+      <input type="number" [(ngModel)]="item.price" placeholder="Preço" />
+      <button
+        (click)="updateItem(item._id!, item.name!, item.quantity!, item.price!)">
+        Salvar
+      </button>
+      <button
+        (click)="deleteItem(item._id!)">
+        Deletar
+      </button>
+    </li>
+  </ul>
 </div>

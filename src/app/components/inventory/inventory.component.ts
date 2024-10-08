@@ -9,6 +9,7 @@ import { InventoryItem } from '../../../models/inventory.model';
 })
 export class InventoryComponent implements OnInit {
   items: InventoryItem[] = [];
+  searchTerm: string = ''; // Para a barra de pesquisa
 
   constructor(private inventoryService: InventoryService) { }
 
@@ -18,31 +19,43 @@ export class InventoryComponent implements OnInit {
 
   loadItems(): void {
     this.inventoryService.getItems().subscribe(
-      (data: InventoryItem[]) => this.items = data,
-      (error) => console.error('Erro ao carregar os itens do inventário', error)
+      (data: InventoryItem[]) => {
+        this.items = data;
+      },
+      (error) => console.error('Erro ao carregar o inventário', error)
     );
   }
 
-  addItem(name: string, quantity: number, price: number): void {
-    const newItem: InventoryItem = { name, quantity, price };
+  addItem(name: string, quantity: string, price: string): void {
+    const quantityNum = parseInt(quantity, 10); // Convertendo para número
+    const priceNum = parseFloat(price); // Convertendo para número
+
+    // Verificar se o nome do item já existe
+    const existingItem = this.items.find(item => item.name.toLowerCase() === name.toLowerCase());
+    if (existingItem) {
+      console.error('Produto com esse nome já existe');
+      return; // Impede a adição de itens duplicados
+    }
+
+    const newItem: InventoryItem = { name, quantity: quantityNum, price: priceNum }; // Removido o _id
     this.inventoryService.addItem(newItem).subscribe(
       (item: InventoryItem) => {
         this.items.push(item);
       },
-      (error) => console.error('Erro ao adicionar o item', error)
+      (error) => console.error('Erro ao adicionar item', error)
     );
   }
 
   updateItem(id: string, name: string, quantity: number, price: number): void {
-    const updatedItem: InventoryItem = { name, quantity, price };
+    const updatedItem: InventoryItem = { _id: id, name, quantity, price };
+    const index = this.items.findIndex(item => item._id === id);
+
     this.inventoryService.updateItem(id, updatedItem).subscribe(
       () => {
-        const index = this.items.findIndex(item => item._id === id);
-        if (index !== -1) {
-          this.items[index] = { _id: id, ...updatedItem };
-        }
+        // Atualiza o item no array sem sobrescrever _id
+        this.items[index] = updatedItem;
       },
-      (error) => console.error('Erro ao atualizar o item', error)
+      (error) => console.error('Erro ao atualizar item', error)
     );
   }
 
@@ -51,7 +64,14 @@ export class InventoryComponent implements OnInit {
       () => {
         this.items = this.items.filter(item => item._id !== id);
       },
-      (error) => console.error('Erro ao deletar o item', error)
+      (error) => console.error('Erro ao deletar item', error)
+    );
+  }
+
+  // Função para filtrar os itens com base na pesquisa
+  get filteredItems(): InventoryItem[] {
+    return this.items.filter(item =>
+      item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 }

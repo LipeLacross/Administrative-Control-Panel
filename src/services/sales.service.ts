@@ -26,4 +26,13 @@ export class SalesService {
   deleteSale(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  deleteSalesByProductId(productId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/product/${productId}`);
+  }
+
+  // Método para buscar vendas por ID de produto
+  getSalesByProductId(productId: string): Observable<Sale[]> {
+    return this.http.get<Sale[]>(`${this.apiUrl}/product/${productId}`);
+  }
 }

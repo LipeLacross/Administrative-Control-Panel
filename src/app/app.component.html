@@ -1,7 +1,31 @@
-<nav class="navbar">
-  <a class="navbar-item" [routerLink]="['/']">Dashboard</a>
-  <a class="navbar-item" [routerLink]="['/inventory']">Inventory</a>
-  <a class="navbar-item" [routerLink]="['/reports']">Reports</a>
-  <a class="navbar-item" [routerLink]="['/sales']">Sales</a>
+<nav class="navbar is-success is-spaced has-shadow" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <strong class="is-size-5 has-text-weight-bold has-text-white">Painel Administrativo</strong>
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item has-text-weight-bold is-size-5" [routerLink]="['/']">
+        <i class="fas fa-tachometer-alt mr-2"></i> 🏠 Dashboard
+      </a>
+      <a class="navbar-item has-text-weight-bold is-size-5" [routerLink]="['/inventory']">
+        <i class="fas fa-boxes mr-2"></i> 📦 Inventário
+      </a>
+      <a class="navbar-item has-text-weight-bold is-size-5" [routerLink]="['/reports']">
+        <i class="fas fa-chart-line mr-2"></i> 📊 Relatórios
+      </a>
+      <a class="navbar-item has-text-weight-bold is-size-5" [routerLink]="['/sales']">
+        <i class="fas fa-dollar-sign mr-2"></i> 💸 Vendas
+      </a>
+    </div>
+  </div>
 </nav>
+
 <router-outlet></router-outlet>

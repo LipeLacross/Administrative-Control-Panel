@@ -1,26 +1,84 @@
-<div>
-  <h2>Adicionar Venda</h2>
+<div class="container mt-5">
+  <h1 class="title has-text-centered is-uppercase has-text-primary is-size-2">💸 Adicionar Venda</h1>
+  <hr class="has-background-primary">
 
-  <label for="productSelect">Selecionar Produto:</label>
-  <select id="productSelect" (change)="onProductSelect($event)">
-    <option value="">-- Selecione um produto --</option>
-    <option *ngFor="let item of inventoryItems" [value]="item._id">{{ item.name }}</option>
-  </select>
+  <!-- Formulário para Adicionar Venda -->
+  <div class="box has-background-primary-light p-5">
+    <h2 class="subtitle has-text-primary-dark">Adicionar Venda ao Inventário</h2>
+    <div class="field is-horizontal">
+      <div class="field-body">
+        <div class="field">
+          <label class="label">Produto</label>
+          <div class="control has-icons-left">
+            <div class="select is-fullwidth">
+              <select [(ngModel)]="selectedProductId">
+                <option value="" disabled selected>Selecione um produto</option>
+                <option *ngFor="let item of inventoryItems" [value]="item._id">
+                  {{ item.name }} - Estoque: {{ item.quantity }} - Preço: {{ item.price | currency:'BRL':'symbol':'1.2-2' }}
+                </option>
+              </select>
+            </div>
+            <span class="icon is-small is-left">
+              <i class="fas fa-box"></i>
+            </span>
+          </div>
+        </div>
 
-  <label for="quantityInput">Quantidade:</label>
-  <input id="quantityInput" type="number" [(ngModel)]="quantity" min="1" />
+        <div class="field">
+          <label class="label">Quantidade</label>
+          <div class="control has-icons-left">
+            <input class="input is-primary" type="number" [(ngModel)]="quantity" placeholder="Quantidade">
+            <span class="icon is-small is-left">
+              <i class="fas fa-sort-numeric-up"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="control">
+      <button class="button is-primary is-fullwidth mt-4" (click)="addSale()">
+        <i class="fas fa-plus mr-2"></i>Adicionar Venda
+      </button>
+    </div>
+    <div *ngIf="errorMessage" class="notification is-danger mt-4">
+      {{ errorMessage }}
+    </div>
+  </div>
 
-  <button (click)="addSale()">Adicionar Venda</button>
+  <!-- Lista de Vendas -->
+  <div class="box has-background-light mt-5">
+    <h2 class="subtitle has-text-primary">📊 Vendas Realizadas</h2>
+    <ul>
+      <li *ngFor="let sale of sales" class="box mb-3 has-background-white-ter">
+        <div class="columns is-vcentered">
+          <div class="column">
+            <strong>Produto:</strong> {{ sale.productName }}
+          </div>
+          <div class="column">
+            <strong>Quantidade:</strong> {{ sale.amount }}
+          </div>
+          <div class="column">
+            <strong>Preço Unitário:</strong> {{ sale.price | currency:'BRL':'symbol':'1.2-2' }}
+          </div>
+          <div class="column">
+            <strong>Preço Total:</strong> {{ getSaleTotalPrice(sale) | currency:'BRL':'symbol':'1.2-2' }}
+          </div>
+          <div class="column">
+            <strong>Data:</strong> {{ sale.date | date:'short' }}
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-danger is-light" (click)="deleteSale(sale._id)">
+              <i class="fas fa-trash mr-1"></i>Deletar
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 
-  <div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
-
-  <h3>Vendas Recentes</h3>
-  <ul>
-    <li *ngFor="let sale of sales">
-      {{ sale.productName }} - {{ sale.amount }} unidades - R$ {{ (sale.price * sale.amount).toFixed(2) }} cada
-      <button *ngIf="sale._id" (click)="deleteSale(sale._id)">Deletar</button>
-    </li>
-  </ul>
-
-  <h4>Valor Total de Vendas: R$ {{ totalSalesValue.toFixed(2) }}</h4>
+  <!-- Valor Total das Vendas -->
+  <div class="box has-background-primary-light mt-5">
+    <h2 class="subtitle has-text-primary-dark">💰 Valor Total das Vendas</h2>
+    <p class="is-size-3 has-text-weight-bold">{{ totalSalesValue | currency:'BRL':'symbol':'1.2-2' }}</p>
+  </div>
 </div>

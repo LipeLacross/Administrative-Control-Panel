@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SalesService } from '../../../services/sales.service';
 import { InventoryService } from '../../../services/inventory.service';
-import { Sale } from '../../../models/sales.model';
+import { SalesService } from '../../../services/sales.service';
 import { InventoryItem } from '../../../models/inventory.model';
+import { Sale } from '../../../models/sales.model';
 
 @Component({
   selector: 'app-sales',
@@ -10,146 +10,102 @@ import { InventoryItem } from '../../../models/inventory.model';
   styleUrls: ['./sales.component.css']
 })
 export class SalesComponent implements OnInit {
-  sales: Sale[] = [];
   inventoryItems: InventoryItem[] = [];
-  totalSalesValue: number = 0;
+  sales: Sale[] = [];
+  selectedProductId: string | undefined;
+  quantity: number = 0; // Valor padrão
   errorMessage: string = '';
-  selectedProductId: string = '';
-  quantity: number = 1;
 
   constructor(
-    private salesService: SalesService,
-    private inventoryService: InventoryService
-  ) {}
+    private inventoryService: InventoryService,
+    private salesService: SalesService
+  ) { }
 
   ngOnInit(): void {
+    this.loadInventoryItems();
     this.loadSales();
-    this.loadInventory();
+  }
+
+  loadInventoryItems(): void {
+    this.inventoryService.getItems().subscribe(
+      (data: InventoryItem[]) => {
+        this.inventoryItems = data;
+      },
+      (error) => console.error('Erro ao carregar itens do inventário', error)
+    );
   }
 
   loadSales(): void {
     this.salesService.getSales().subscribe(
       (data: Sale[]) => {
         this.sales = data;
-        this.calculateTotalSalesValue();
       },
-      (error) => console.error('Erro ao carregar as vendas', error)
+      (error) => console.error('Erro ao carregar vendas', error)
     );
   }
 
-  loadInventory(): void {
-    this.inventoryService.getItems().subscribe(
-      (data: InventoryItem[]) => {
-        this.inventoryItems = data;
-        console.log('Inventário carregado:', this.inventoryItems); // Debug
-      },
-      (error) => console.error('Erro ao carregar o inventário', error)
-    );
+  get totalSalesValue(): number {
+    return this.sales.reduce((total, sale) => total + (sale.price * sale.amount), 0);
+  }
+
+  onProductSelect(event: any): void {
+    this.selectedProductId = event.target.value;
   }
 
   addSale(): void {
-    const selectedProduct = this.inventoryItems.find(item => item._id === this.selectedProductId);
-
-    if (!selectedProduct) {
-      this.errorMessage = 'Produto não encontrado no inventário';
+    if (!this.selectedProductId) {
+      this.errorMessage = 'Por favor, selecione um produto.';
       return;
     }
 
-    if (this.quantity > selectedProduct.quantity) {
-      this.errorMessage = 'Quantidade de venda excede o estoque';
+    if (this.quantity <= 0) {
+      this.errorMessage = 'Por favor, insira uma quantidade válida.';
       return;
     }
 
-    // Use o preço do produto selecionado do inventário
-    const price = selectedProduct.price; // Preço do item no inventário
-    console.log('Preço do produto selecionado:', price); // Debug
-
-    // Verifique se o preço é válido
-    if (isNaN(price) || price <= 0) {
-      this.errorMessage = 'Preço inválido do produto';
+    const selectedItem = this.inventoryItems.find(item => item._id === this.selectedProductId);
+    if (!selectedItem) {
+      this.errorMessage = 'Produto não encontrado no inventário.';
       return;
     }
 
     const newSale: Sale = {
-      productName: selectedProduct.name,
+      productId: this.selectedProductId,
+      productName: selectedItem.name,
       amount: this.quantity,
-      price: price, // Preço do produto selecionado
+      price: selectedItem.price,
       date: new Date()
     };
 
     this.salesService.addSale(newSale).subscribe(
       (sale: Sale) => {
-        console.log('Venda adicionada:', sale); // Debug
         this.sales.push(sale);
-        selectedProduct.quantity -= this.quantity;
-
-        if (selectedProduct._id) {
-          this.updateInventory(selectedProduct._id, selectedProduct);
-        }
-
-        this.calculateTotalSalesValue();
+        this.errorMessage = ''; // Limpa a mensagem de erro
+        this.loadInventoryItems(); // Atualiza os itens do inventário
       },
       (error) => {
-        console.error('Erro ao adicionar a venda', error);
-        this.errorMessage = 'Erro ao adicionar a venda. Tente novamente mais tarde.';
+        console.error('Erro ao adicionar venda', error);
+        this.errorMessage = 'Erro ao adicionar venda.';
       }
     );
   }
 
-  deleteSale(id: string): void {
-    if (!id) return;
+  deleteSale(saleId: string | undefined): void {
+    if (!saleId) return;
 
-    const saleToDelete = this.sales.find(sale => sale._id === id);
-    if (!saleToDelete) return;
-
-    this.salesService.deleteSale(id).subscribe(
+    this.salesService.deleteSale(saleId).subscribe(
       () => {
-        const product = this.inventoryItems.find(item => item.name === saleToDelete.productName);
-        if (product) {
-          product.quantity += saleToDelete.amount;
-          if (product._id) {
-            this.updateInventory(product._id, product);
-          }
-        }
-        this.sales = this.sales.filter(sale => sale._id !== id);
-        this.calculateTotalSalesValue();
+        console.log('Venda deletada com sucesso');
+        this.sales = this.sales.filter(sale => sale._id !== saleId);
       },
       (error) => {
-        console.error('Erro ao deletar a venda', error);
-        this.errorMessage = 'Erro ao deletar a venda. Tente novamente mais tarde.';
+        console.error('Erro ao deletar venda', error);
       }
     );
   }
 
-  calculateTotalSalesValue(): void {
-    // Verifique se há vendas antes de calcular
-    if (this.sales.length === 0) {
-      this.totalSalesValue = 0;
-      return;
-    }
-
-    // Calcule o total de vendas
-    this.totalSalesValue = this.sales.reduce((total, sale) => {
-      const salePrice = sale.price || 0; // Use 0 se o preço for nulo
-      const saleAmount = sale.amount || 0; // Use 0 se a quantidade for nula
-      return total + (salePrice * saleAmount); // Assegure-se de que ambos são numéricos
-    }, 0);
-
-    console.log('Valor Total de Vendas:', this.totalSalesValue); // Debug
-  }
-
-  updateInventory(id: string, item: InventoryItem): void {
-    this.inventoryService.updateItem(id, item).subscribe(
-      () => console.log('Estoque atualizado'),
-      (error) => console.error('Erro ao atualizar o inventário', error)
-    );
-  }
-
-  onProductSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    if (target) {
-      this.selectedProductId = target.value;
-      this.errorMessage = '';
-    }
+  // Método para calcular o valor total da venda específica
+  getSaleTotalPrice(sale: Sale): number {
+    return sale.amount * sale.price;
   }
 }

@@ -1,38 +1,63 @@
-<div class="container">
-  <h2 class="title">Reports</h2>
+<div class="container mt-5">
+  <h1 class="title has-text-centered is-uppercase has-text-info is-size-2">📊 Relatórios</h1>
+  <hr class="has-background-info">
 
-  <!-- Formulário para adicionar novo relatório -->
-  <div>
-    <h3>Add New Report</h3>
-    <input type="text" #title placeholder="Title" />
-    <textarea #description placeholder="Description"></textarea>
-    <button (click)="addReport(title.value, description.value)">Add Report</button>
+  <!-- Formulário para Adicionar Novo Relatório -->
+  <div class="box has-background-info-light p-5">
+    <h2 class="subtitle has-text-info-dark">Adicionar Novo Relatório</h2>
+    <div class="field">
+      <label class="label">Título do Relatório</label>
+      <div class="control has-icons-left">
+        <input class="input is-info" type="text" #title placeholder="Título">
+        <span class="icon is-small is-left">
+          <i class="fas fa-file-alt"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Descrição</label>
+      <div class="control">
+        <textarea class="textarea is-info" #description placeholder="Descrição"></textarea>
+      </div>
+    </div>
+
+    <div class="control">
+      <button class="button is-info is-fullwidth mt-4" (click)="addReport(title.value, description.value)">
+        <i class="fas fa-plus mr-2"></i>Adicionar Relatório
+      </button>
+    </div>
   </div>
 
-  <!-- Lista de relatórios -->
-  <div *ngIf="reports.length > 0">
-    <h3>Reports List</h3>
+  <!-- Lista de Relatórios -->
+  <div class="box has-background-light mt-5" *ngIf="reports.length > 0">
+    <h2 class="subtitle has-text-info">📋 Lista de Relatórios</h2>
     <ul>
-      <li *ngFor="let report of reports">
-        <!-- Campos editáveis para atualização -->
-        <input type="text" [(ngModel)]="report.title" placeholder="Title" />
-        <textarea [(ngModel)]="report.description" placeholder="Description"></textarea>
-
-        <!-- Botão de atualização -->
-        <button *ngIf="report._id" (click)="updateReport(report._id || '', report.title || '', report.description || '')">
-          Update
-        </button>
-
-        <!-- Botão de deletar -->
-        <button *ngIf="report._id" (click)="deleteReport(report._id || '')">
-          Delete
-        </button>
+      <li *ngFor="let report of reports" class="box mb-3 has-background-white-ter">
+        <div class="columns is-vcentered">
+          <div class="column">
+            <label class="label">Título</label>
+            <input class="input is-info" type="text" [(ngModel)]="report.title" placeholder="Título">
+          </div>
+          <div class="column">
+            <label class="label">Descrição</label>
+            <textarea class="textarea is-info" [(ngModel)]="report.description" placeholder="Descrição"></textarea>
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-success is-light mr-2" *ngIf="report._id" (click)="updateReport(report._id || '', report.title || '', report.description || '')">
+              <i class="fas fa-save mr-1"></i>Atualizar
+            </button>
+            <button class="button is-danger is-light" *ngIf="report._id" (click)="deleteReport(report._id || '')">
+              <i class="fas fa-trash mr-1"></i>Deletar
+            </button>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
 
   <!-- Mensagem se não houver relatórios -->
-  <div *ngIf="reports.length === 0">
-    <p>No reports found.</p>
+  <div class="notification is-warning mt-5" *ngIf="reports.length === 0">
+    <p class="has-text-centered">Nenhum relatório encontrado.</p>
   </div>
 </div>

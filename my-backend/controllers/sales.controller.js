@@ -98,26 +98,43 @@ exports.updateSale = async (req, res) => {
   }
 };
 
-// Deletar uma venda
-exports.deleteSale = async (req, res) => {
+exports.deleteProduct = async (req, res) => {
   try {
-    const sale = await Sale.findById(req.params.id);
-    if (!sale) return res.status(404).json({ message: 'Sale not found' });
+    const productId = req.params.id;
 
-    // Encontre o item no inventário relacionado à venda
-    const inventoryItem = await Inventory.findOne({ name: sale.productName.toLowerCase() });
+    // Busque todas as vendas relacionadas ao produto
+    const sales = await Sale.find({ productId: productId });
 
-    if (inventoryItem) {
-      // Repor a quantidade da venda deletada ao estoque
-      inventoryItem.quantity += sale.amount;
-      await inventoryItem.save();
+    // Para cada venda encontrada, delete-a e atualize o inventário
+    for (let sale of sales) {
+      const inventoryItem = await Inventory.findOne({ name: sale.productName.toLowerCase() });
+      if (inventoryItem) {
+        // Repor a quantidade de estoque
+        inventoryItem.quantity += sale.amount;
+        await inventoryItem.save();
+      }
+      await Sale.findByIdAndDelete(sale._id);
     }
 
-    // Delete a venda
-    await Sale.findByIdAndDelete(req.params.id);
-
-    res.status(204).send();
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(204).send(); // Resposta sem conteúdo se a exclusão for bem-sucedida
+  } catch (error) {
+    console.error('Erro ao deletar produto:', error);
+    res.status(500).json({ message: 'Erro ao deletar produto' });
   }
 };
+
+
+exports.deleteProduct = (req, res) => {
+  const productId = req.params.id;
+  SalesModel.findByIdAndDelete(productId)
+    .then(() => {
+      res.status(204).send(); // Resposta sem conteúdo se a exclusão for bem-sucedida
+    })
+    .catch(error => {
+      console.error('Erro ao deletar produto:', error);
+      res.status(500).send('Erro ao deletar produto');
+    });
+};
+
+
+

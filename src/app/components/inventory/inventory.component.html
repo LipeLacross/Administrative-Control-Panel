@@ -1,26 +1,86 @@
-<div>
-  <div>
-    <h2>Adicionar Item</h2>
-    <input type="text" #name placeholder="Nome do item" />
-    <input type="number" #quantity placeholder="Quantidade" />
-    <input type="number" #price placeholder="Preço" />
-    <button (click)="addItem(name.value, quantity.value.toString(), price.value.toString())">Adicionar</button>
+<div class="container mt-5">
+  <h1 class="title has-text-centered is-uppercase has-text-primary is-size-2">📦 Gerenciamento de Inventário</h1>
+  <hr class="has-background-primary">
+
+  <!-- Formulário para Adicionar Item -->
+  <div class="box has-background-info-light p-5">
+    <h2 class="subtitle has-text-primary-dark">Adicionar Novo Item ao Inventário</h2>
+    <div class="field is-horizontal">
+      <div class="field-body">
+        <div class="field">
+          <label class="label">Nome do Item</label>
+          <div class="control has-icons-left">
+            <input class="input is-primary" type="text" #name placeholder="Nome do item">
+            <span class="icon is-small is-left">
+              <i class="fas fa-box"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Quantidade</label>
+          <div class="control has-icons-left">
+            <input class="input is-primary" type="number" #quantity placeholder="Quantidade">
+            <span class="icon is-small is-left">
+              <i class="fas fa-sort-numeric-up"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Preço</label>
+          <div class="control has-icons-left">
+            <input class="input is-primary" type="number" #price placeholder="Preço">
+            <span class="icon is-small is-left">
+              <i class="fas fa-dollar-sign"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="control">
+      <button class="button is-primary is-fullwidth mt-4" (click)="addItem(name.value, quantity.value.toString(), price.value.toString())">
+        <i class="fas fa-plus mr-2"></i>Adicionar Item
+      </button>
+    </div>
   </div>
-  <h2>Itens do Inventário</h2>
-  <input [(ngModel)]="searchTerm" placeholder="Pesquisar" />
-  <ul>
-    <li *ngFor="let item of filteredItems">
-      <input [(ngModel)]="item.name" placeholder="Nome" />
-      <input type="number" [(ngModel)]="item.quantity" placeholder="Quantidade" />
-      <input type="number" [(ngModel)]="item.price" placeholder="Preço" />
-      <button
-        (click)="updateItem(item._id!, item.name!, item.quantity!, item.price!)">
-        Salvar
-      </button>
-      <button
-        (click)="deleteItem(item._id!)">
-        Deletar
-      </button>
-    </li>
-  </ul>
+
+  <!-- Itens do Inventário -->
+  <div class="box has-background-light mt-5">
+    <h2 class="subtitle has-text-primary">📋 Itens do Inventário</h2>
+    <div class="field mb-4">
+      <div class="control has-icons-left">
+        <input class="input is-info" [(ngModel)]="searchTerm" placeholder="Pesquisar item">
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+    </div>
+    <ul>
+      <li *ngFor="let item of filteredItems" class="box mb-3 has-background-white-ter">
+        <div class="columns is-vcentered">
+          <div class="column">
+            <label class="label">Nome</label>
+            <input class="input is-info" [(ngModel)]="item.name" placeholder="Nome">
+          </div>
+          <div class="column">
+            <label class="label">Quantidade</label>
+            <input class="input is-info" type="number" [(ngModel)]="item.quantity" placeholder="Quantidade">
+          </div>
+          <div class="column">
+            <label class="label">Preço</label>
+            <input class="input is-info" type="number" [(ngModel)]="item.price" placeholder="Preço">
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-success is-light mr-2" (click)="updateItem(item._id!, item.name!, item.quantity!, item.price!)">
+              <i class="fas fa-save mr-1"></i>Salvar
+            </button>
+            <button class="button is-danger is-light" (click)="deleteItem(item._id!)">
+              <i class="fas fa-trash mr-1"></i>Deletar
+            </button>g
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>

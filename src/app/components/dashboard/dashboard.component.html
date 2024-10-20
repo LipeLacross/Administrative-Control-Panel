@@ -1,4 +1,88 @@
-<div class="container">
-  <h2 class="title">Dashboard</h2>
-  <p>Welcome to the admin panel dashboard.</p>
+<div class="container mt-5">
+  <h1 class="title has-text-centered is-uppercase has-text-primary is-size-1"> Painel de Controle </h1>
+  <hr class="has-background-primary">
+
+  <!-- Informações Resumidas -->
+  <div class="columns is-multiline is-centered">
+    <div class="column is-one-third">
+      <div class="box has-background-info has-text-white has-shadow">
+        <h3 class="subtitle has-text-light">Valor Total das Vendas</h3>
+        <p class="is-size-3 has-text-weight-bold">{{ totalSalesValue |  currency:'BRL':'symbol':'1.2-2' }}</p>
+      </div>
+    </div>
+
+    <div class="column is-one-third">
+      <div class="box has-background-link has-text-white has-shadow">
+        <h3 class="subtitle has-text-light">Total de Itens no Inventário</h3>
+        <p class="is-size-3 has-text-weight-bold">{{ totalInventoryItems }}</p>
+      </div>
+    </div>
+
+    <div class="column is-one-third">
+      <div class="box has-background-success has-text-white has-shadow">
+        <h3 class="subtitle has-text-light">Produto Mais Vendido</h3>
+        <p class="is-size-3 has-text-weight-bold">{{ topSellingProduct }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Últimos Relatórios -->
+  <div class="columns">
+    <div class="column">
+      <div class="box has-background-light">
+        <h3 class="subtitle has-text-primary is-uppercase">📋 Últimos Relatórios</h3>
+        <ul>
+          <li *ngFor="let report of latestReports" class="mb-3">
+            <div class="content">
+              <strong class="is-size-4">{{ report.title }}</strong>: {{ report.description }}
+              <br><span class="tag is-info is-light mt-2">Data: {{ report.date | date: 'short' }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Itens com Baixo Estoque -->
+  <div class="columns">
+    <div class="column">
+      <div class="box has-background-warning-light">
+        <h3 class="subtitle has-text-danger is-uppercase">⚠️ Itens com Baixo Estoque</h3>
+        <ul>
+          <li *ngFor="let item of lowStockItems" class="mb-3">
+            <div class="content">
+              <strong class="is-size-4">{{ item.name }}</strong> - Quantidade: {{ item.quantity }}
+              <span class="tag is-warning is-light ml-2">Baixo Estoque</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendas Mensais -->
+  <div class="columns">
+    <div class="column">
+      <div class="box has-background-light">
+        <h3 class="subtitle has-text-link is-uppercase">📊 Vendas Mensais</h3>
+        <div class="table-container">
+          <table class="table is-striped is-fullwidth is-hoverable">
+            <thead class="has-background-link has-text-white">
+            <tr>
+              <th>Mês</th>
+              <th>Valor Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let value of monthlySales; let i = index">
+              <td>{{ getMonthName(i) }}</td>
+              <td>{{ value |  currency:'BRL':'symbol':'1.2-2' }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+

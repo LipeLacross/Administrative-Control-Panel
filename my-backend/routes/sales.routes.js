@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const salesController = require('../controllers/sales.controller');
+const SalesController = require('../controllers/sales.controller');
 
-router.get('/', salesController.getAllSales);
-router.get('/:id', salesController.getSaleById);
-router.post('/', salesController.createSale);
-router.put('/:id', salesController.updateSale);
-router.delete('/:id', salesController.deleteSale);
+router.get('/', SalesController.getAllSales);
+router.get('/:id', SalesController.getSaleById);
+router.post('/', SalesController.createSale);
+router.put('/:id', SalesController.updateSale);
+router.delete('/:id', SalesController.deleteSale);
+
+// Rota para deletar vendas associadas a um produto específico
+router.delete('/product/:id', SalesController.deleteProduct);
 
 module.exports = router;

@@ -7,7 +7,7 @@ import { Report } from '../models/reports.model';
   providedIn: 'root'
 })
 export class ReportsService {
-  private apiUrl = 'http://localhost:3000/api/reports'; // Ajuste a URL conforme necessário
+  private apiUrl = 'http://localhost:3000/api/reports';
 
   constructor(private http: HttpClient) {}
 

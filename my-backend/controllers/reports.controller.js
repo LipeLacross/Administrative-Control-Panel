@@ -29,7 +29,7 @@ exports.createReport = async (req, res) => {
   const newReport = new Report({
     title,
     description,
-    date: new Date() // Define a data atual
+    date: new Date()
   });
 
   try {

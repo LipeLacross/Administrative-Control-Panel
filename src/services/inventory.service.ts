@@ -7,7 +7,7 @@ import { InventoryItem } from '../models/inventory.model';
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiUrl = 'http://localhost:3000/api/inventory'; // Atualize aqui
+  private apiUrl = 'http://localhost:3000/api/inventory';
 
   constructor(private http: HttpClient) { }
 

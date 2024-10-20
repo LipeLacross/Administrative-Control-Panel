@@ -1,7 +1,6 @@
-// models/reports.model.ts
 export interface Report {
-  _id?: string;  // Adiciona um campo _id, que pode ser opcional
+  _id?: string;
   title: string;
   description: string;
-  date: Date;  // Garante que a data seja do tipo Date
+  date: Date;
 }

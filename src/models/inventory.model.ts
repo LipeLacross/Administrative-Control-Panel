@@ -1,5 +1,5 @@
 export interface InventoryItem {
-  _id?: string; // Torna o _id opcional
+  _id?: string;
   name: string;
   quantity: number;
   price: number;

@@ -7,7 +7,7 @@ import { InventoryComponent } from './components/inventory/inventory.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { SalesComponent } from './components/sales/sales.component';
 import {FormsModule} from "@angular/forms";
-import { HttpClientModule } from '@angular/common/http'; // Adicione esta linha
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
